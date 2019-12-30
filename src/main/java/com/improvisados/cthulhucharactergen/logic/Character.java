@@ -21,84 +21,146 @@ public class Character
     private String recidence;
     private String birthplace;
             
-    private Rank STR;
-    private Rank CON;
-    private Rank POW;
-    private Rank DEX;
-    private Rank APP;
-    private Rank INT;
-    private Rank EDU;
-    private Rank SIZ;    
-    private Rank LUK;
+    private Rank strength;
+    private Rank constitution;
+    private Rank size;   
+    private Rank dexterity;
+    private Rank appearance;
+    private Rank intelligence;    
+    private Rank power;    
+    private Rank education;
+    
+    private Rank luck;
     
     private boolean hasMayorWound;
     private boolean isParsialyInsane;
     private boolean isIndefiniteInsane;
     
     
-    private int TOTAL_HP;
-    private int CURRENT_HP;
+    private int totalHP;
+    private int currentHP;
     
-    private int TOTAL_SANITY;    
-    private int CURRENT_SANITY;
+    private int totalSanity;    
+    private int currentSanity;
     
-    private int TOTAL_MP;
-    private int CURRENT_MP;
+    private int totalMP;
+    private int CurrentMP;
     
-    private int MOV;
+    private int movement;
+    private int sanity;
+    
+    private int build;
+    private String damagebonus;
+    
     private Ocupation ocupation;
     private List<Skill> skills;
 
-    public Character(String name, int STR, int CON,int SIZ,int DEX,int APP, int INT, int POW,int EDU, int LUK)
+    public Character(String name,String player,int age,Sex sex,String recidence, String birthplace,int strength, int constitution,int size,int dexterity,int appearance, int intelligence, int power,int education, int luck)
     {
+        //ATTRIBUTES
         this.name = name;
-        this.STR = new Rank(STR);
-        this.CON = new Rank(CON);
-        this.POW = new Rank(POW);
-        this.DEX = new Rank(DEX);
-        this.APP = new Rank(APP);
-        this.INT = new Rank(INT);
-        this.EDU = new Rank(EDU);
-        this.SIZ = new Rank(SIZ);
-        this.LUK = new Rank(LUK);
+        this.player=player;
+        this.age=age;
+        this.sex=sex;
+        this.recidence=recidence;
+        this.birthplace=birthplace;
+        
+        this.strength = new Rank(strength);
+        this.constitution = new Rank(constitution);
+        this.size = new Rank(size);
+        this.dexterity = new Rank(dexterity);
+        this.appearance = new Rank(appearance);
+        this.intelligence = new Rank(intelligence);
+        this.power = new Rank(power);                
+        this.education = new Rank(education);        
+        this.luck = new Rank(luck);
+        
+        
         this.skills = new ArrayList<>();
         
+                
+        //DERIVATED ATTRIBUTES
         
-        if(this.STR.compareTo(this.SIZ)==-1 && this.DEX.compareTo(this.SIZ)==-1)
+        //HP
+        this.totalHP=(constitution+size)/10;
+        this.currentHP=this.totalHP;
+        
+        //SANITY
+        this.totalSanity=power;
+        this.currentSanity=this.totalSanity;
+        
+        //MP
+        this.totalMP=power/5;
+        this.CurrentMP=this.totalMP;
+     
+        //SANITY
+        this.sanity=power;
+        
+        //MOV        
+        if(this.strength.compareTo(this.size)==-1 && this.dexterity.compareTo(this.size)==-1)
         {
-            this.MOV=7;
+            this.movement=7;
         }
-        else if(this.STR.compareTo(this.SIZ)==1 && this.DEX.compareTo(this.SIZ)==1)
+        else if(this.strength.compareTo(this.size)==1 && this.dexterity.compareTo(this.size)==1)
         {
-            this.MOV=9;
+            this.movement=9;
         }
-        else if(this.STR.compareTo(this.SIZ)>=0 || this.DEX.compareTo(this.SIZ)>=0)
+        else if(this.strength.compareTo(this.size)>=0 || this.dexterity.compareTo(this.size)>=0)
         {
-            this.MOV=8;
+            this.movement=8;
         }
         
-        this.TOTAL_HP=(CON+SIZ)/10;
-        this.CURRENT_HP=this.TOTAL_HP;
+        //BUILD AND DAMAGE BONUS
+        int strSiz=strength+size;
+        
+        if(2<=strSiz && strSiz<=64)
+        {
+             this.build=-2;
+             this.damagebonus="-2";
+        }
+        else if(65<strSiz && strSiz<84)
+        {
+            this.build=-1;
+             this.damagebonus="-1";
+        }
+        else if(85<strSiz && strSiz<124)
+        {
+            this.build=0;
+             this.damagebonus="0";
+        }
+        else if(125<strSiz && strSiz<164)
+        {
+            this.build=1;
+             this.damagebonus="1d4";
+        }
+        else if(165<strSiz && strSiz<204)
+        {
+            this.build=2;
+             this.damagebonus="1d6";
+        }
+        else if(strSiz>=205)
+        {
+           
+        }
+       
+            
     }
-
-    public Character()
-    {
-    }
-
-    
     
     @Override
     public String toString()
     {
         String lineBreak=System.lineSeparator();
         String ret=this.name+lineBreak;
-        ret+="  STR: "+STR.toString()+"     APP: "+APP.toString()+lineBreak;
-        ret+="  CON: "+CON.toString()+"     INT: "+INT.toString()+lineBreak;
-        ret+="  SIZ: "+SIZ.toString()+"     POW: "+POW.toString()+lineBreak;
-        ret+="  DEX: "+DEX.toString()+"     EDU: "+EDU.toString()+lineBreak;
-        ret+="          LUCK: "+LUK.toString()+lineBreak;
-        ret+="          MOV: "+this.MOV+lineBreak;
-        ret+="          HP: "+this.TOTAL_HP+"/"+this.CURRENT_HP+lineBreak;
+        ret+="  STR: "+strength.toString()+"     APP: "+appearance.toString()+lineBreak;
+        ret+="  CON: "+constitution.toString()+"     INT: "+intelligence.toString()+lineBreak;
+        ret+="  SIZ: "+size.toString()+"     POW: "+power.toString()+lineBreak;
+        ret+="  DEX: "+dexterity.toString()+"     EDU: "+education.toString()+lineBreak;
+        ret+="          LUCK: "+luck.toString()+lineBreak;
+        ret+="          MOV: "+this.movement+lineBreak;
+        ret+="          HP: "+this.totalHP+"/"+this.currentHP+lineBreak;
+        ret+="          MP: "+this.totalMP+"/"+this.CurrentMP+lineBreak;
+        ret+="          SANITY: "+this.sanity+lineBreak;
+        
         return ret;
     }
     
